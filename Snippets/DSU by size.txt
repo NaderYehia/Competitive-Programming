@@ -1,0 +1,27 @@
+struct DSU {
+    vector<int> par, sz;
+    int n;
+
+    void init(int n) {
+        par.resize(n);
+        sz.resize(n);
+        iota(par.begin(), par.end(), 0);
+        fill(sz.begin(), sz.end(), 1);
+        this->n = n;
+    }
+
+    int root(int u) {
+        return par[u] == u ? u : par[u] = root(par[u]);
+    }
+
+    bool join(int u, int v) {
+        u = root(u);
+        v = root(v);
+        if (u == v) return false;
+        if (sz[u] < sz[v]) swap(u, v);
+        par[v] = u;
+        sz[u] += sz[v];
+        --n;
+        return true;
+    }
+};
