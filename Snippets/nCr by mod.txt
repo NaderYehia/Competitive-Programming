@@ -1,0 +1,29 @@
+const int N = 1e6 + 10, M = 1e9 + 7;
+
+int f[N], invf[N];
+
+int power(int x, int p) {
+    int ret = 1;
+    while (p) {
+        if (p & 1) ret = 1LL * ret * x % M;
+        x = 1LL * x * x % M;
+        p >>= 1;
+    }
+    return ret;
+}
+
+int inv(int x) {
+    return power(x, M - 2);
+}
+
+void go() {
+    f[0] = invf[0] = 1;
+    for (int i = 1; i < N; ++i) {
+        f[i] = 1LL * f[i - 1] * i % M;
+        invf[i] = inv(f[i]);
+    }
+}
+
+int nCr(int n, int c) {
+    return 1LL * f[n] * invf[n - c] % M * invf[c] % M;
+}

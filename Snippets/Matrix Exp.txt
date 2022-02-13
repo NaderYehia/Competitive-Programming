@@ -1,0 +1,24 @@
+const int M = 1e9 + 7;
+
+vector<vector<int>> mul(vector<vector<int>> &v1, vector<vector<int>> &v2) {
+    vector<vector<int>> ret(v1.size(), vector<int>(v2[0].size()));
+    for (int i = 0; i < v1.size(); ++i) {
+        for (int j = 0; j < v2.size(); ++j) {
+            for (int k = 0; k < v1[i].size(); ++k) {
+                ret[i][j] = (ret[i][j] + 1LL * v1[i][k] * v2[k][j] % M) % M;
+            }
+        }
+    }
+    return ret;
+}
+
+vector<vector<int>> power(vector<vector<int>> &x, long long p) {
+    vector<vector<int>> ret(x.size(), vector<int>(x.size()));
+    for (int i = 0; i < x.size(); ++i) ret[i][i] = 1;
+    while (p) {
+        if (p & 1) ret = mul(ret, x);
+        x = mul(x, x);
+        p >>= 1;
+    }
+    return ret;
+}

@@ -1,0 +1,28 @@
+const int N = 1e6 + 10, M = 1e9 + 7;
+
+struct Trie {
+    int nxt[N][26], cnt[N], nNodes, root;
+
+    int createNode() {
+        memset(nxt[nNodes], -1, sizeof nxt[nNodes]);
+        return nNodes++;
+    }
+
+    void init() {
+        nNodes = 0;
+        root = createNode();
+    }
+
+    void add(const string &s) {
+        int cur = root;
+        for (int i = 0; i < s.length(); ++i) {
+            if (~nxt[cur][s[i] - 'a']) {
+                cur = nxt[cur][s[i] - 'a'];
+            } else {
+                cur = nxt[cur][s[i] - 'a'] = createNode();
+            }
+        }
+        cnt[cur]++;
+    }
+
+} trie;

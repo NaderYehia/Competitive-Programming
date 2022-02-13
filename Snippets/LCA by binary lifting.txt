@@ -1,0 +1,69 @@
+
+const int N = 2e5 + 10, M = 2 * N;
+
+struct ADJ {
+    int head[N], to[M], nxt[M], ne;
+
+    void init(int n) {
+        memset(head, -1, sizeof head);
+        ne = 0;
+    }
+
+    void addedge(int u, int v) {
+        nxt[ne] = head[u];
+        to[ne] = v;
+        head[u] = ne++;
+    }
+
+    void addbiedge(int u, int v) {
+        addedge(u, v);
+        addedge(v, u);
+    }
+} adj;
+
+int dp[20][N], depth[N], n, q;
+
+void dfs(int u, int p, int dep) {
+    dp[0][u] = p;
+    depth[u] = dep;
+    for (int e = adj.head[u]; ~e; e = adj.nxt[e]) {
+        int v = adj.to[e];
+        if (v == p) continue;
+        dfs(v, u, dep + 1);
+    }
+}
+
+void go() {
+
+    dfs(0, -1, 0);
+
+    dp[0][n] = n;
+    for (int i = 1; i < 20; ++i) {
+        dp[i][n] = n;
+        for (int j = 0; j < n; ++j) {
+            dp[i][j] = dp[i - 1][dp[i - 1][j]];
+        }
+    }
+}
+
+int LCA(int u, int v) {
+    if (depth[u] > depth[v]) swap(u, v);
+
+    int k = depth[v] - depth[u];
+    for (int i = 0; k; ++i, k >>= 1) {
+        if (k & 1) {
+            v = dp[i][v];
+        }
+    }
+    if (u == v) return u;
+
+    for (int i = 18; ~i; --i) {
+        if (dp[i][u] != dp[i][v]) {
+            u = dp[i][u];
+            v = dp[i][v];
+        }
+    }
+
+    assert(dp[0][u] == dp[0][v]);
+    return dp[0][u];
+}
